@@ -16,27 +16,26 @@ func statStr(s int) string {
 	} else if s > 0 {
 		return fmt.Sprintf("M%d", s/2)
 	} else {
-		return "0"
+		return "Draw"
 	}
 }
 
 func Play(status map[uint32]int) {
 	scanner := bufio.NewScanner(os.Stdin)
 	state := board.StartState()
+	oturn := false
 
 	for {
-		id := state.Id()
-
 		var stat int
-		if s, ok := status[id]; !ok {
+		if s, ok := status[state.MinimizeId().Id()]; !ok {
 			stat = 0
 		} else {
 			stat = s
 		}
 
-		fmt.Printf("Current state (%s):\n%s\n", statStr(stat), state)
+		fmt.Printf("Current state (%s):\n%s\n", statStr(stat), state.String(oturn))
 
-		if !state.Xturn() {
+		if oturn {
 			if state.Won() {
 				fmt.Printf("You lose.\n")
 				return
@@ -69,7 +68,7 @@ func Play(status map[uint32]int) {
 
 				newstate := state.Copy()
 				newstate.Move(uint8(i))
-				newid := newstate.Id()
+				newid := newstate.MinimizeId().Id()
 
 				var sc int
 				if s, ok := status[newid]; !ok {
@@ -89,5 +88,7 @@ func Play(status map[uint32]int) {
 
 			state = choice
 		}
+
+		oturn = !oturn
 	}
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"combsolve/examples/tictactoe/board"
+	"combsolve/examples/tictactoe/play"
 	"combsolve/solver"
 	"fmt"
 )
@@ -31,6 +32,7 @@ func main() {
 
 			newstate := state.Copy()
 			newstate.Move(uint8(i))
+			newstate = newstate.MinimizeId()
 			newid := newstate.Id()
 
 			children[id] = append(children[id], newid)
@@ -59,5 +61,5 @@ func main() {
 
 	fmt.Printf("Found %d wins, %d loses, %d draws\n", wins, loses, len(states)-wins-loses)
 
-	// play.Play(status)
+	play.Play(status)
 }
